@@ -30,6 +30,7 @@ DEFAULT_PLAYBOOKS_CHECKS_CONFIG = {
     }
 }
 
+
 class Checkable(object):
 
     OK = "ok"
@@ -80,7 +81,8 @@ class Checkable(object):
 
 
 class PlaybookChecker(Checkable):
-    def __init__(self, path: Path, check_config: Dict = {}):
+
+    def __init__(self, path: Path, check_config: Dict={}):
         super().__init__()
         self._config = DEFAULT_PLAYBOOKS_CHECKS_CONFIG if check_config == {} else check_config
         self._logger.debug(self._config)
@@ -105,7 +107,7 @@ class PlaybookChecker(Checkable):
             if self._config["check_doc"]:
                 self._check_doc()
             if self._config["check_permissions"]:
-                self._check_permissionsc()
+                self._check_permissions()
 
     def _check_syntax(self):
             command = [
@@ -127,19 +129,31 @@ class PlaybookChecker(Checkable):
                 else:
                     self._add_issue(self.ERROR, "playbook > syntax-check", stderr)
 
-    def _check_permissionsc(self):
+    def _check_permissions(self):
         permissions = self._config["permissions"]
         if "mode" in permissions:
             mode = oct(stat.S_IMODE(self._path.stat().st_mode))
-            mode_expected = permissions["mode"]
             self._logger.debug(mode)
+            mode_expected = permissions["mode"]
             if mode != mode_expected:
                 msg = "{found} instead {expected}".format(found=mode, expected=mode_expected)
-                self._add_issue(self.WARNING, "permission > mode", msg) 
-        owner = self._path.owner()
-        self._logger.debug(owner)
-        group = self._path.group()
-        self._logger.debug(group)
+                self._add_issue(self.WARNING, "permission > mode", msg)
+
+        if "owner" in permissions:
+            owner = self._path.owner()
+            self._logger.debug(owner)
+            owner_expected = permissions["owner"]
+            if owner != owner_expected:
+                msg = "{found} instead {expected}".format(found=owner, expected=owner_expected)
+                self._add_issue(self.ERROR, "permission > owner", msg)
+
+        if "group" in permissions:
+            group = self._path.group()
+            self._logger.debug(group)
+            group_expected = permissions["group"]
+            if group != group_expected:
+                msg = "{found} instead {expected}".format(found=group, expected=group_expected)
+                self._add_issue(self.ERROR, "permission > group", msg)
 
     def _check_doc(self):
         doc = self._extract_doc()
