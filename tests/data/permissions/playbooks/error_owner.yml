@@ -1,0 +1,14 @@
+---
+#PLAYBOOK_DOC# --- 
+#PLAYBOOK_DOC# author: olivier
+#PLAYBOOK_DOC# description:
+#PLAYBOOK_DOC#   - bla
+#PLAYBOOK_DOC# ...
+
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display inventory_hostname
+      debug:
+        var: inventory_hostname
+...
