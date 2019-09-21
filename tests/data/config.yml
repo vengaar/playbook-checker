@@ -1,0 +1,16 @@
+---
+check_syntax: true
+check_doc: true
+check_permissions: true
+permissions:
+  owner: "vengaar"
+  group: "vengaar"
+  mode: "0o664"
+doc:
+  type: "comment"
+  prefix: "#PLAYBOOK_DOC# "
+  authors:
+    - "vengaar"
+    - "foo"
+    - "bar"
+...
