@@ -1,6 +1,7 @@
 import logging
 import unittest
 from pprint import pprint
+import os
 
 import sys
 sys.path.append(".")
@@ -9,8 +10,10 @@ from playbook_checker import read_config, to_json
 
 class TestPlaybookCheck(unittest.TestCase):
 
+    config_file = os.path.join(tests._folder, "data", "config_all.yml")
+
     def test_read_config(self):
-        check_config = read_config(tests._config_file)
+        check_config = read_config(self.config_file)
         self.assertTrue(check_config["check_syntax"])
         self.assertTrue(check_config["check_doc"])
         self.assertTrue(check_config["check_permissions"])
@@ -18,19 +21,30 @@ class TestPlaybookCheck(unittest.TestCase):
         self.assertEqual(check_config["doc"]["prefix"], "#PLAYBOOK_DOC# ")
 
     def test_to_json(self):
-        check_config = read_config(tests._config_file)
+        check_config = read_config(self.config_file)
         str_json = to_json(check_config)
+#         print(str_json)
         expected = """{
   "check_doc": true,
   "check_permissions": true,
   "check_syntax": true,
   "doc": {
-    "authors": [
-      "vengaar",
-      "foo",
-      "bar"
+    "fields": [
+      {
+        "expected": [
+          "foo",
+          "bar"
+        ],
+        "name": "author",
+        "required": true
+      },
+      {
+        "name": "description",
+        "required": true
+      }
     ],
     "prefix": "#PLAYBOOK_DOC# ",
+    "required": false,
     "type": "comment"
   },
   "permissions": {

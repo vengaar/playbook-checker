@@ -1,7 +1,6 @@
 import logging
 import unittest
 from pathlib import Path
-import os
 
 import sys
 sys.path.append('.')

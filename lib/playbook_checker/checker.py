@@ -14,12 +14,6 @@ from typing import Dict
 # project import
 from .utils import to_json
 
-DEFAULT_PLAYBOOKS_CHECKS_CONFIG = {
-    "check_syntax": True,
-    "check_doc": False,
-    "check_permissions": False,
-}
-
 
 class Checkable(object):
 
@@ -74,7 +68,7 @@ class PlaybookChecker(Checkable):
 
     def __init__(self, path: Path, check_config: Dict={}):
         super().__init__()
-        self._config = DEFAULT_PLAYBOOKS_CHECKS_CONFIG if check_config == {} else check_config
+        self._config = check_config
         self._logger.debug(self._config)
         self._logger.info(path)
         self._path = path
@@ -92,11 +86,11 @@ class PlaybookChecker(Checkable):
             self._add_issue(self.ERROR, "playbook > yaml parsing", str(err))
         else:
             self._logger.debug(self._playbook)
-            if self._config["check_syntax"]:
+            if self._config.get("check_syntax", True):
                 self._check_syntax()
-            if self._config["check_doc"]:
+            if self._config.get("check_doc", False):
                 self._check_doc()
-            if self._config["check_permissions"]:
+            if self._config.get("check_permissions", False):
                 self._check_permissions()
 
     def _check_syntax(self):
@@ -110,8 +104,7 @@ class PlaybookChecker(Checkable):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
-            self.syntax = (process.stderr == b"")
-            if not self.syntax:
+            if not process.stderr == b"":
                 self._logger.debug(process.stderr)
                 stderr = str(process.stderr, "utf-8")
                 if process.returncode == 0:

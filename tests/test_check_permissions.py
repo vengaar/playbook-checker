@@ -1,8 +1,6 @@
 import logging
 import unittest
 from pathlib import Path
-import os
-from pprint import pprint
 
 import sys
 sys.path.append('.')
