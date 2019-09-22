@@ -10,6 +10,11 @@ _folder_lib = os.path.join(_folder_project, 'lib')
 _config_file = os.path.join(_folder, "data", "config.yml")
 sys.path.insert(0, _folder_lib)
 
+from playbook_checker import read_config
+
+def get_check_config(name):
+    config_file = os.path.join(_folder, "data", name)
+    return read_config(config_file)
 
 class TestPlaybookCheck(unittest.TestCase):
 

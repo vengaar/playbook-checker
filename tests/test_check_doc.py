@@ -12,16 +12,7 @@ from playbook_checker import PlaybookChecker
 class TestPlaybookCheckDoc(tests.TestPlaybookCheck):
 
     debug = False
-    check_config = {
-        'check_syntax': False,
-        'check_doc': True,
-        'check_permissions': False,
-        'doc': {
-            'type': 'comment',
-            'prefix': '#PLAYBOOK_DOC# ',
-            'authors': ['vengaar', 'foo', 'bar']
-        },
-    }
+    check_config = tests.get_check_config("config_doc.yml") 
 
     def test_ok(self):
         reports = [

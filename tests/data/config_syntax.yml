@@ -1,0 +1,5 @@
+---
+check_syntax: true
+check_doc: false
+check_permissions: false
+...

@@ -13,11 +13,7 @@ from playbook_checker import PlaybookChecker
 class TestPlaybookCheckSyntax(tests.TestPlaybookCheck):
 
     debug = False
-    check_config = {
-        'check_syntax': True,
-        'check_doc': False,
-        'check_permissions': False,
-    }
+    check_config = tests.get_check_config("config_syntax.yml")
 
     def test_ok(self):
         reports = [

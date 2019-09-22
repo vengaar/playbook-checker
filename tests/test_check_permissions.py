@@ -13,16 +13,7 @@ from playbook_checker import PlaybookChecker
 class TestPlaybookCheckPermissions(tests.TestPlaybookCheck):
 
     debug = False
-    check_config = {
-        'check_syntax': False,
-        'check_doc': False,
-        'check_permissions': True,
-        'permissions': {
-            'owner': 'vengaar',
-            'group': 'vengaar',
-            'mode': '0o664',
-        }
-    }
+    check_config = tests.get_check_config("config_permissions.yml")
 
     def test_warning(self):
         reports = [

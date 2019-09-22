@@ -11,7 +11,7 @@ from pathlib import Path
 
 # project import
 from .checker import PlaybookChecker
-from .utils import to_json
+from .utils import to_json, read_config
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -62,7 +62,7 @@ def main():
     logger.info(args)
     
     if args.config is not None:
-        config = loag_config(fp)
+        config = read_config(args.config)
         logger.debug(config)
     else:
         config = {}

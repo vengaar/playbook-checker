@@ -18,16 +18,6 @@ DEFAULT_PLAYBOOKS_CHECKS_CONFIG = {
     "check_syntax": True,
     "check_doc": False,
     "check_permissions": False,
-    "doc": {
-        "type": "comment",
-        "prefix": "#PLAYBOOK_DOC# ",
-        "authors": ["vengaar", "foo", "bar"]
-    },
-    "permissions": {
-        "owner": "foo",
-        "group": "foo",
-        "mode": "0o664",
-    }
 }
 
 
@@ -156,15 +146,29 @@ class PlaybookChecker(Checkable):
                 self._add_issue(self.ERROR, "permission > group", msg)
 
     def _check_doc(self):
-        doc = self._extract_doc()
-        if doc is not None:
+        type_issue_doc = "doc"
+        doc_config = self._config["doc"]
+        doc_type = doc_config["type"]
+        if doc_type == "comment":
+            doc = self._extract_doc()
+        elif doc_type == "wapi":
+            doc = self._playbook[0].get("vars", {}).get("wapi", {}).get("metadata")
+        if doc is None:
+            msg = "Doc missing"
+            criticity = self.ERROR if doc_config.get("required", True) else self.WARNING
+            self._add_issue(criticity, type_issue_doc, msg)
+        else:
             self.description = doc.get("description")
-            if not "author" in doc:
-                self._add_issue(self.ERROR, "doc", "Missing author")
-            else:
-                self.author = doc["author"]
-                if self.author not in self._config["doc"]["authors"]:
-                    self._add_issue(self.ERROR, "doc", "Invalid author")
+            self.author = doc.get("author")
+            for field in self._config["doc"].get("fields", []):
+                field_name = field["name"]
+                if field["required"] and field_name not in doc:
+                    self._add_issue(self.ERROR, "doc", "Missing {field}".format(field=field_name))
+                else:
+                    if "expected" in field:
+                        value = doc[field_name]
+                        if value not in field["expected"]:
+                            self._add_issue(self.ERROR, "doc", "Invalid {field}".format(field=field_name))
 
     def _extract_doc(self):
         prefix = self._config["doc"]["prefix"]
@@ -185,5 +189,3 @@ class PlaybookChecker(Checkable):
                     self._add_issue(self.ERROR, "doc > yaml parsing", str(err))
                 except Exception as err:
                     self._add_issue(self.ERROR, "doc > yaml parsing", str(err))
-            else:
-                self._add_issue(self.WARNING, "doc", "Doc missing")
