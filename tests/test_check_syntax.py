@@ -1,5 +1,6 @@
 import logging
 import unittest
+import copy
 from pathlib import Path
 
 import sys
@@ -42,6 +43,18 @@ class TestPlaybookCheckSyntax(tests.TestPlaybookCheck):
         msg = reports[0]['warnings'][0]['msg']
         self.assertTrue(msg.startswith(' [WARNING]: Could not match supplied host pattern'))
 
+    def test_env(self):
+        check_config = copy.deepcopy(self.check_config)
+        check_config["syntax"] = {"env": {
+                "ANSIBLE_FORCE_COLOR": "true",
+            }
+        }
+        reports = [
+            PlaybookChecker(path, check_config).info
+            for path in Path(tests._folder).glob('**/syntax/playbooks/warning*.yml')
+        ]
+        msg = reports[0]['warnings'][0]['msg']
+        self.assertTrue(msg.startswith('\x1b[1;35m [WARNING]'))
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

@@ -100,9 +100,10 @@ class PlaybookChecker(Checkable):
                 "--syntax-check",
                 self.path,
             ]
+            syntax_env = self._config.get("syntax", {}).get("env")
             env = copy.deepcopy(os.environ)
-            env["ANSIBLE_FORCE_COLOR"] = "false"
-            env["ANSIBLE_NOCOLOR"] = "true"
+            if syntax_env is not None:
+                env.update(syntax_env)
             process = subprocess.run(
                 command,
                 env=env,
