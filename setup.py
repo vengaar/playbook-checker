@@ -1,7 +1,7 @@
 #pip3 install /home/vengaar/playbook-checker
 
-#python3 setup.py sdist
-# => create local
+# python3 setup.py sdist
+# twine upload dist/*
 
 from setuptools import find_packages, setup
 
