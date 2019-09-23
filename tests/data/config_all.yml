@@ -1,0 +1,21 @@
+---
+check_syntax: true
+check_doc: true
+doc:
+  type: "comment"
+  prefix: "#PLAYBOOK_DOC# "
+  required: false
+  fields:
+    - name: author
+      required: true
+      expected:
+        - foo
+        - bar
+    - name: description
+      required: true
+check_permissions: true
+permissions:
+  owner: "vengaar"
+  group: "vengaar"
+  mode: "0o664"
+...

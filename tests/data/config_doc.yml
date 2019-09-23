@@ -1,0 +1,17 @@
+---
+check_syntax: false
+check_doc: true
+check_permissions: false
+doc:
+  type: "comment"
+  prefix: "#PLAYBOOK_DOC# "
+  required: false
+  fields:
+    - name: author
+      required: true
+      expected:
+        - foo
+        - bar
+    - name: description
+      required: true
+...
