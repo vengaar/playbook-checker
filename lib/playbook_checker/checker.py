@@ -8,6 +8,7 @@ import json
 import yaml
 import logging
 import subprocess
+import copy
 from pathlib import Path
 from typing import Dict
 
@@ -99,8 +100,12 @@ class PlaybookChecker(Checkable):
                 "--syntax-check",
                 self.path,
             ]
+            env = copy.deepcopy(os.environ)
+            env["ANSIBLE_FORCE_COLOR"] = "false"
+            env["ANSIBLE_NOCOLOR"] = "true"
             process = subprocess.run(
                 command,
+                env=env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
