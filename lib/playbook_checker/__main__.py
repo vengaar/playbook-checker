@@ -69,7 +69,7 @@ def main():
     absolute_path = os.path.expanduser(args.path)
     report = [
         PlaybookChecker(path, config).info
-        for path in Path(absolute_path).glob("**/playbooks/*.yml")
+        for path in Path(absolute_path).glob(args.pattern)
     ]
     if args.dump:
         print(to_json(report))
