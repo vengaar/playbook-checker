@@ -1,6 +1,7 @@
 import logging
 import unittest
 from pathlib import Path
+from pprint import pprint
 
 import sys
 sys.path.append('.')
@@ -18,6 +19,7 @@ class TestPlaybookCheckPermissions(tests.TestPlaybookCheck):
             PlaybookChecker(path, self.check_config).info
             for path in Path(tests._folder).glob('**/permissions/playbooks/warning*.yml')
         ]
+        pprint(reports)
         self.check_warning_reports(reports)
         msg = reports[0]['warnings'][0]['msg']
         self.assertEqual(msg, '0o644 instead 0o664')

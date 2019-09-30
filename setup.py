@@ -11,7 +11,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='playbook-checker',
-    version='0.1.2',
+    version='0.1.3',
     author='Olivier Perriot',
     author_email='',
     description='TODO',
