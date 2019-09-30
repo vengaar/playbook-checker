@@ -78,7 +78,7 @@ class PlaybookChecker(Checkable):
         self.project_path = os.path.dirname(project_playbooks)
         self.project = os.path.basename(self.project_path)
         try:
-            with open(self.path) as fp:
+            with open(self.path, encoding="utf-8") as fp:
                 self._playbook = yaml.safe_load(fp)
         except (yaml.scanner.ScannerError,
             yaml.parser.ParserError) as err:
@@ -171,7 +171,7 @@ class PlaybookChecker(Checkable):
 
     def _extract_doc(self):
         prefix = self._config["doc"]["prefix"]
-        with open(self.path) as fp:
+        with open(self.path, encoding="utf-8") as fp:
             lines = [
                 line[len(prefix):]
                 for line in fp
